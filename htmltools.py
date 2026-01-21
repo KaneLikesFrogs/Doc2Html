@@ -1,402 +1,537 @@
+import os
+import shutil
+import math
 
-import webbrowser
+from bs4 import BeautifulSoup
+from pathlib import Path
 '''
-Filepath = '/put/path/here'
-File = open(Filepath)
-Data = str(File.read())
-Data = Data.replace(u'\xa0',u'&#160;')
+    CHANGES 
+    - Changed case method:
+        - camelCase for variables
+        - snake_case for functions
+        - PascalCase for classes/objects
+        - This was previously jumbled. This makes code more readable as its easier to discern what something is at a glance
+    - Introduced 'Manual' class :
+        - Many of the old functions had gotten needlessly complicated and messy due to repeating the same variables in. 
+        - This now means they are all stored as part of the class instead and makes it easier to adjust parts of it 
+    - Always adds tags as it avoids overhead on having to discern what the tag actually is 
+    - Adds paragraph breaks above start of text so that nothing is hidden behind topbar 
+    - Changed from create_doc to prettify_html to minimise chance of confusion between .doc files
+    - Simplifed finding of headers
+
+    
 '''
-#can uncomment above code and call the create doc function with appropiate parameters to skip need for using gui
+class Manual: # moved to class as many variables ended up getting repeated throughout
+    def __init__(self,original,newName): # default value setting
+        # Setup files and folders
+        original = original.replace('\\','/')
+        self.ogDir = os.path.dirname(original)
+        self.ogName = os.path.basename(original).split('.', 1)[0]
+        self.ogFiles = self.ogDir + '/' + self.ogName + '_files'
+        self.logoPath = 'logo.png' # this is a path relative to program. May be better to state entire path?
+        self.logoName = os.path.basename(self.logoPath)
+        self.logoLink =  'https://github.com/KaneLikesFrogs' # set this to a website to redirect a user to somewhere else when clicking logo
+        self.ogRelPath = (self.ogName + '_files').replace(' ','%20')
 
-def Get_Header(Data,HeaderStart,HeaderEnd,TitlePrefix="",TitleSuffix=""): #used for finding particular types of headers inside header bracketing
+        self.newDir = self.ogDir + '/' + newName
+        self.newName = newName
+        self.newFiles = self.newDir + '/' + newName + '_files'
+        self.newRelPath = (self.newName + '_files').replace(' ','%20')
+        
+        self.nameBlacklist = []
+        self.nameCutoff = []
+        self.tagBlacklist = ['1','2','3','4','5','6','7','8','9','0',' ','\n'] 
+        self.tagCutoff = []
+        # these are characters to remove from names on nav menus/bookmarks
+        # exists as a class variable so it can be changed/altered externally
+        # similarly can use cutoff to remove everything before a marker 
+        #   for example chapter 1 - Example 1 would become: Example (with cutoff of ['-'])
+        #   as the tag cutsoff numbers the tag would end up being _example
 
-    Found = True
-    Index = 0
-    EndIndex = 0
-    IndexList = []
-    EndIndexList = []
-    TidyIndexList = []
-    IDList = []
-    NameList = []
-    
-    while Found == True:
-        Index = Data.find(HeaderStart,Index + 1)
-        EndIndex = Data.find(HeaderEnd,Index)
-        if Index == -1:
-            Found = False
+        # order of operations means that any changes to the name will also be applied to the tag
+
+        # Setup default parameters
+        # More concise than functions with repeated arguments
+        self.parentHeading = 'h2'
+        self.childHeading = 'h3'
+        self.tag = 'qq_' 
+        
+
+        self.parentIds = []
+        self.parentIndexes = []
+        self.parentNames = []
+        self.childIds = []
+        self.childIndexes = []
+        self.childNames = []
+
+        # add and clean data
+        self.data = str(open(original).read()).replace(u'\xa0',u'&#160;')
+        
+        self.update_paths(newName)
+
+        # set css parameters
+        self.sideNavWidth = 340
+        self.topNavHeight = 80
+        self.highlight = '#604D81' 
+        self.navFontSize = 14 
+        print("init complete")
+
+    def set_tag(self,newTag): # can be called to change the bookmark tags
+        # called at start of prettify_html function
+        # can change before prettifying 
+        self.tag = newTag
+        self.add_tags(False)
+        self.add_tags(True)
+
+    def get_header(self,child=False): # used for adding tags and setting up lists inside class
+        index = 0
+        endIndex = 0
+        indexList = []
+        endIndexList = []
+        tidyIndexList = []
+        idList = []
+        nameList = []
+        undesiredChars = ['</a>','<', '>', '"']
+
+        if child:
+            startStr = f"<{self.childHeading}>"
+            endStr = f"</{self.childHeading}>"
         else:
-            IndexList.append(Index)
-            EndIndexList.append(EndIndex)
+            startStr = f"<{self.parentHeading}>"
+            endStr = f"</{self.parentHeading}>"
+        # isolates headers (defined above depending on if it is a child)
+        # can change it manually via the object itself
+        # currently uses h2 and h3 to (as h1 would likely be a title)
+        while True:
+            index = self.data.find(startStr,index + 1)
+            endIndex = self.data.find(endStr,index)
+            if index == -1:
+                break
+            else:
+                indexList.append(index)
+                endIndexList.append(endIndex)
 
-    if TitlePrefix == "" or TitleSuffix == "": 
-
-        for x in range(len(IndexList)):
-            IDStart = IndexList[x]
-            IDEnd = EndIndexList[x]
-            IDList.append(Data[IDStart:IDEnd])
-            TidyIndexList.append(IndexList[x])
-            Name = Data[IDStart + len(HeaderStart):IDEnd]
-            UndesiredChars = ['</a>','<', '>', '"'] 
-            for i in UndesiredChars:
-                Name = Name.replace(i, '')
-            Name = Name.replace('\n',' ')
-            NameList.append(Name)
+        for x in range(len(indexList)):
+            snip = self.data[indexList[x]:endIndexList[x]]
+            soup = BeautifulSoup(snip,'html.parser')
+            soupName = ''
+            for y in soup.strings:
+                soupName = soupName + repr(y)
+            soupSpoon = ['>','<','/','"',"'","\\xa0","\\xa"] # scoop out any whitespace/invalid chars
+            for y in soupSpoon:
+                soupName = soupName.replace(y,'')
+            soupName = soupName.replace('\\n',' ')
+            name = soupName
+            undesiredChars = ['</a>','<', '>', '"'] # removes anything that could mess with html tagging
+            # note that both soupSpoon and undesiredChars are hardcoded to NOT be changed
+            # however as I may have missed some cases they can be changed here if necesseary
+            
+            for y in undesiredChars:
+                    name = name.replace(y, '')
+            for y in self.nameBlacklist:
+                name = name.replace(y,'')
+            for y in self.nameCutoff:
+                 if name.find(y) > 0:
+                     name = name[name.find(y)+1:]
         
-        return(IDList,TidyIndexList,NameList)
+            tidyTag = self.tag + name.lower()
+            for y in self.tagBlacklist:
+                tidyTag = tidyTag.replace(y.lower(),'')
+            for y in self.tagCutoff:
+                 if tidyTag.find(y) > 0:
+                     tidyTag = tidyTag[tidyTag.find(y)+1:]
+            if name != "": # skip items were there is no name
+                nameList.append(name)
+                tidyIndexList.append(indexList[x])
+                idList.append(tidyTag)
 
-    for x in range(len(IndexList)): #creates a list of titles found within bounds of header markers
-        IDStart = Data.find(TitlePrefix,IndexList[x],EndIndexList[x])
-        IDEnd = Data.find(TitleSuffix,IDStart,EndIndexList[x])
-        if IDStart == -1 or IDEnd == -1:
-            continue
+        tidyIndexList.append(len(self.data))
+
+        if child:
+            self.childIds = idList
+            self.childIndexes = tidyIndexList
+            self.childNames = nameList
         else:
-            IDList.append(Data[IDStart:IDEnd-1])
-            TidyIndexList.append(IndexList[x]) #Want to essentially filter to elements were there is something present
-            NameEnd = EndIndexList[x]
-            NameStart = Data.rindex(r'">',IndexList[x],NameEnd) 
-            Name = Data[NameStart:NameEnd] #As name is at end of header but otherwise inconsistent can isolate it with this
-            UndesiredChars = ['</a>','<', '>', '"'] 
-            for i in UndesiredChars:
-                Name = Name.replace(i, '')
-            Name = Name.replace('\n',' ')
-            NameList.append(Name)
-        
-    TidyIndexList.append(len(Data))
-
-    return(IDList,TidyIndexList,NameList)
-
-def Add_Tags(Data,Header,Tag="qq"): #This will add tags if a document does not have them so that the nav menus have a reference to go to
-    #try and use a tag that is unique for example qq never appears ordinairily so is used by default
-    IDs, Indexes, Names = Get_Header(Data,f"<{Header}>",f"</{Header}>")
-    TagList = []
-    Names = Names[1:] #first eleemnt may be title or something, unsure of doing things this way
-    Indexes = Indexes[1:]
-    for x in Names:
-        Name = f"{Tag}_{x.replace(' ','_')}"
-        TagList.append(Name)
-    for x in range(len(Indexes)):
-        #print(f'<a name="{TagList[x]}"></a>)
-        Name = f'<a name="{TagList[x]}"></a>'
-        #print(Name)
-        NameLen = len(Name)
-        Index = Indexes[x]
-        #print(Data[Index:Index+len(TagList[x])+1])
-        Data = Data[:Index+4] + Name + Data[Index+4:]
-        #print(Data[Index:Index + NameLen + len(TagList[x]) + 6])
-        Indexes = [y+NameLen for y in Indexes]
-        
-    return(Data)
+            self.parentIds = idList
+            self.parentIndexes = tidyIndexList
+            self.parentNames = nameList
+        return(idList,tidyIndexList,nameList) # sets class values but can also be used to grab the headers themselves 
     
-def Create_HTML_Contents(Data,ParentHeader = "h2",ChildHeader = "h3",Prefix="",Suffix="",LogoLocation = "",LogoSize = 340,LogoLink = ""): #Creates sidenav menu in HTML
+    def add_tags(self,child=False): # adds specified tag to all items
+        ids, indexes, names = self.get_header(child) # gets indexes + names
+        tagList = ids
+        # print(ids,indexes,names)
+        # names = names[1:]
+        for x in range(len(indexes)):
+            try:
+                name = f'<a name="{tagList[x]}"></a>'
+                nameLen = len(name)
+                index = indexes[x]
+                self.data = self.data[:index+4] + name + self.data[index+4:] # offset by 4 for the for characters in : <h2> (or <h3>)
+                # this inserts the reference to the document
+                indexes = [y+nameLen for y in indexes] # offset remaining indexes
+            except:
+                pass
+        self.get_header(child) # refreshes indexes and can now send out ids
 
-    ParentIDs , ParentIndexes, ParentNames = Get_Header(Data,f"<{ParentHeader}>",f"</{ParentHeader}>",Prefix,Suffix)
-    ChildIDs, ChildIndexes, ChildNames = Get_Header(Data,f"<{ChildHeader}>",f"</{ChildHeader}>",Prefix,Suffix)
-    Output= [('<div class="sidenav">')]
-    if LogoLocation == "":
-        pass
-    else:
-        Output.append('\t<a href="'+ LogoLink + '" target="_blank">')
-        Output.append(f'\t<img src="{LogoLink}" width="'+ str(LogoSize) + '">')
-        Output.append('\t</a>')
-        Output.append('<p><br></p>')
-    for x in range(len(ParentIDs)):
-        if ParentIDs[x] != "":
-            children = 0
-            for y in range(len(ChildIndexes)):
-                if ChildIndexes[y] > ParentIndexes[x]:
-                    if ChildIndexes[y] < ParentIndexes[x+1]:
-                        children += 1
-            if children < 2:
-                #print(x)
-                Output.append("\t" + '<a href="#' + ParentIDs[x] + '">' + ParentNames[x] + '</a>')
+    def update_paths(self,newName=""): # updates files to be in new folder to remove dependency on old folder
+            if newName == "":
+                print("no name submitted, adjusting logo position")
+                newName = self.newName # if name isnt submitted just uses previous name
+            else: # if target is changing then moves files around
+                self.newDir = self.ogDir + '/' + newName
+                self.newName = newName
+                self.newFiles = self.newDir + '/' + newName + '_files'
+                self.newRelPath = (self.newName + '_files').replace(' ','%20')
+                if Path(self.newFiles).exists() and Path(self.newFiles).is_dir(): # if dir exists then errors
+                    return FileExistsError(self.newFiles)            
+                try: # error proofing for invalid logo path
+                    shutil.copy(self.logoPath,self.newFiles)
+                except:
+                    print("logo not found")
+                os.makedirs(self.newFiles,exist_ok=True)
+                shutil.copytree(self.ogFiles,self.newFiles,dirs_exist_ok=True) 
+            if self.logoPath == "":
                 pass
             else:
-                Output.append("\t" + '<button class="dropdown-btn">' + str(ParentNames[x]) + '</button>')
-                Output.append("\t \t" + '<div class="dropdown-container">')
-                Output.append("\t \t" + '<a href="#' + ParentIDs[x] +  '">' + ParentNames[x] + '</a>')
-                for y in range(len(ChildIndexes)):
-                    if ChildIndexes[y] > ParentIndexes[x]:
-                        if ChildIndexes[y] < ParentIndexes[x+1]:
-                            Output.append("\t \t" + '<a href="#' + ChildIDs[y] + '">' + ChildNames[y] + '</a>')
-                Output.append("\t \t" + '</div>')
-    Output.append("\t<p><br></p>")
-    Output.append("\t<p><br></p>") # adds 2 page breaks to help avoid bottom element disappearing when too many elements present
-    Output.append("</div>")
+                self.logoName = os.path.basename(self.logoPath)
+                try:
+                    shutil.copy(self.logoPath,self.newFiles) # replaces logo if changed
+                except:
+                    print("logo not found")
 
-    return(Output)
+    def create_html_contents(self): # creates html for contents page based on 
+        output = [('<div class="sidenav">')]
+        if self.logoPath != "":
+            if self.logoLink != "":
+                output.append('\t<a href="'+ self.logoLink + f'" target="_blank">')
+            output.append(f'\t<img src="{self.newRelPath}/{self.logoName}" width="'+ str(self.sideNavWidth) + '">')
+            output.append('\t</a>')
+            output.append('<p><br></p>')
+        for x in range(len(self.parentIds)):
+                if self.parentIds[x] != "":
+                    children = 0
+                    for y in range(len(self.childIndexes)):
+                        if self.childIndexes[y] > self.parentIndexes[x]:
+                            if self.childIndexes[y] < self.parentIndexes[x+1]:
+                                children += 1
+                    if children < 1:
+                        #print(x)
+                        output.append("\t" + '<a href="#' + self.parentIds[x] + '">' + self.parentNames[x] + '</a>')
+                        pass
+                    else:
+                        output.append("\t" + '<button class="dropdown-btn">' + str(self.parentNames[x]) + '</button>')
+                        output.append("\t \t" + '<div class="dropdown-container">')
+                        output.append("\t \t" + '<a href="#' + self.parentIds[x] +  '">' + self.parentNames[x] + '</a>')
+                        for y in range(len(self.childIndexes)):
+                            if self.childIndexes[y] > self.parentIndexes[x]:
+                                if self.childIndexes[y] < self.parentIndexes[x+1]:
+                                    output.append("\t \t" + '<a href="#' + self.childIds[y] + '">' + self.childNames[y] + '</a>')
+                        output.append("\t \t" + '</div>')
+        output.append("\t<p><br></p>")
+        output.append("\t<p><br></p>") # adds 2 page breaks to help avoid bottom element disappearing when too many elements present
+        output.append("</div>")
+        output = '\n'.join(output)
+        self.htmlContents = output
 
-def Create_HTML_Index(Data,ParentHeader = "h2",ChildHeader = "h3",Prefix="",Suffix=""): #Creates searchbar items in HTML
-
-    ParentIDs , ParentIndexes, ParentNames = Get_Header(Data,f"<{ParentHeader}>",f"</{ParentHeader}>",Prefix,Suffix)
-    ChildIDs, ChildIndexes, ChildNames = Get_Header(Data,f"<{ChildHeader}>",f"</{ChildHeader}>",Prefix,Suffix)
-    IDs = ParentIDs + ChildIDs
-    Indexes = ParentIndexes + ChildIndexes
-    Names = ParentNames + ChildNames
-    ListItems = []
-    Output = ['<div class = "topnav">']
-    Output.append('\t<div class = "SearchField">')
-    Output.append('\t\t<input type="text" id = "SearchBox" onkeyup="SearchFunc()" placeholder="Search...">')
-    Output.append('\t\t<div class = "SearchResults">')
-    Output.append('\t\t\t<ul id = "IndexItems">')
-    for x in range(len(IDs)): 
-        ListItems.append('\t\t\t\t<li><a href="#' + IDs[x] + '">' + Names[x] + '</a></li>')
-    ListItems.sort()
-    for x in ListItems:
-        Output.append(x)
-    Output.append('\t\t\t</ul>')
-    Output.append('\t\t</div>')
-    Output.append('\t</div>')
-    Output.append("</div>")
-
-    return(Output)
-
-def Create_CSS_Contents(HighlightColour = "#1ED3B0",SidenavSize = 340): 
-    Output = ['/*CSS for contents, paste into style section of html and change as desired*/']
-    Output.append(".sidenav {")
-    Output.append("\theight: 100%;")
-    Output.append('\twidth: ' + str(SidenavSize) + 'px;')
-    Output.append('\tposition: fixed;')
-    Output.append("\tz-index: 1;")
-    Output.append("\ttop: 0;")
-    Output.append("\tleft: 0;")
-    Output.append("\tbackground-color: #f1f1f1;")
-    Output.append("\toverflow-x: hidden;")
-    Output.append("\tpadding: 20px;")
-    Output.append("\tfont-family: Arial, sans-serif;")
-    Output.append("}")
-    Output.append("\n")
-    Output.append('.sidenav a, .dropdown-btn {')
-    Output.append('\tpadding: 6px 8px 6px;')
-    Output.append('\ttext-decoration: none;')
-    Output.append('\tfont-size: 18px;')
-    Output.append('\tcolor: #424242;')
-    Output.append('\tdisplay: block;')
-    Output.append('\tborder: none;')
-    Output.append('\tbackground: none;')
-    Output.append('\twidth: 100%;')
-    Output.append('\ttext-align: left;')
-    Output.append('\tcursor: pointer;')
-    Output.append('\toutline: none;')
-    Output.append("\tfont-family: Arial, sans-serif;")
-    Output.append('}')
-    Output.append("\n")
-    Output.append('.sidenav a:hover, .dropdown-btn:hover {')
-    Output.append('\tcolor: #f1f1f1;')
-    Output.append('\tbackground-color: ' + HighlightColour +";")
-    Output.append('}')
-    Output.append("\n")
-    Output.append(".active {")
-    Output.append("\tbackground-color: " + HighlightColour + ";")
-    Output.append("\tcolor: white;")
-    Output.append("}")
-    Output.append("\n")
-    Output.append(".dropdown-container {")
-    Output.append("\tdisplay: none;")
-    Output.append("\tpadding-left: 20px;")
-    Output.append("\tpadding-right: 20px;")
-    Output.append('\twidth:' + str(SidenavSize - 40) + 'px;')
-    Output.append("\tbackground-color: #e1e1e1;")
-    Output.append("\tfont-family: Arial, sans-serif;")
-    Output.append("}")
-    Output.append("\n")
-    Output.append("@media screen and (max-height: 450px) {")
-    Output.append("\t.sidenav {padding-top: 0px;}")
-    Output.append("\t.sidenav a {font-size: 18px;}")
-    Output.append("}")
-    Output.append("\n")
-
-    return(Output)
-
-def Create_CSS_Index(HighlightColour = "#1ED3B0",TopnavHeight = 80):
-    if TopnavHeight<40:
-        return(["/*No CSS Included for topnav*/"])
-    Output = ['/*CSS for topnav*/']
-    Output.append('.topnav {')
-    Output.append('\tposition: fixed;')
-    Output.append('\ttop: 0;')
-    Output.append('\theight: ' + str(TopnavHeight) +'px;')
-    Output.append('\twidth: 105%;')
-    Output.append('\tbackground-color: #f1f1f1;')
-    Output.append('\tborder-bottom: 20px solid '+ HighlightColour +';')
-    Output.append('\toverflow: visible')
-    Output.append('}')
-    Output.append('#SearchBox {')
-    Output.append('\tfloat: right;')
-    Output.append('\tmargin-top: ' + str(TopnavHeight/4) + 'px;')
-    Output.append('\tmargin-right: 150px;')
-    Output.append('\theight: 40px;')
-    Output.append('\twidth: 200px;')
-    Output.append('\tpadding: 11px;')
-    Output.append('\tz-index: 2;')
-    Output.append('}')
-    Output.append('.SearchResults {')
-    Output.append('\tdisplay: none;')
-    Output.append('\tfloat: right;')
-    Output.append('\tmargin-top: ' + str(TopnavHeight/4 + 40) + 'px;')
-    Output.append('\tmargin-right: -200px;')
-    Output.append('\tmargin-left: 0px;')
-    Output.append('\tmax-width: 200px;')
-    Output.append('\tmin-width: 200px;')
-    Output.append('\tz-index: 1;')
-    Output.append('\tbackground-color: #e1e1e1;')
-    Output.append('\toverflow-y: scroll;')
-    Output.append('\theight: auto;')
-    Output.append('\tmax-height: 375px;')
-    Output.append('\tscrollbar-gutter: stable;')
-    Output.append('\tmargin-left: 0px;')
-    Output.append('}')
-    Output.append('.SearchResults a {')
-    Output.append('\tcolor: black;')
-    Output.append('\ttext-decoration: none;')
-    Output.append('\tdisplay: block;')
-    Output.append('\tborder-top: solid #d1d1d1 2px;')
-    Output.append('\tpadding-top: 6px;')
-    Output.append('\tpadding-bottom: 6px;')
-    Output.append('}')
-    Output.append('.SearchResults a:hover {')
-    Output.append( '\tbackground-color: ' + HighlightColour + ';')
-    Output.append('\tcolor: white')
-    Output.append('}')
-    Output.append('#SearchBox:focus-visible + .SearchResults{')
-    Output.append('display: block; ')
-    Output.append('}')
-    Output.append('.SearchResults:hover{')
-    Output.append('\tdisplay: block;')
-    Output.append('}')
-    Output.append('#IndexItems {')
-    Output.append('\tlist-style-type: none;')
-    Output.append('\tpadding: 5px;')
-    Output.append('\tjustify-content: center;')
-    Output.append('\tfont-size: 16px;')
-    Output.append('\tfont-family: Arial, sans-serif ;')
-    Output.append('}')
-    Output.append('html {')
-    Output.append('\tscroll-padding-top:' + str(TopnavHeight + 20) + 'px;')
-    Output.append('\tscrollbar-gutter: stable;')
-    Output.append('}')
-
-    return(Output)
-
-def Create_JS():
-    Output = ['//START OF DROPDOWN SETUP']
-    Output.append('var dropdown = document.getElementsByClassName("dropdown-btn"); ')
-    Output.append('var i;')
-    Output.append('for (i = 0; i < dropdown.length; i++) {')
-    Output.append('\tdropdown[i].addEventListener("click", function() {')
-    Output.append('\t\tthis.classList.toggle("active");')
-    Output.append('\t\tvar dropdownContent = this.nextElementSibling;')
-    Output.append('\t\tif (dropdownContent.style.display === "block") {')
-    Output.append('\t\t\tdropdownContent.style.display = "none";')
-    Output.append('\t\t} else {')
-    Output.append('\t\t\tdropdownContent.style.display = "block";')
-    Output.append('\t\t}')
-    Output.append('\t});')
-    Output.append('}')
-    Output.append('//END OF DROPDOWN SETUP')
-    Output.append('\n \n')
-    Output.append('//START OF INDEX SEARCH')
-    Output.append('var ul = document.getElementById("IndexItems");')
-    Output.append('var li = ul.getElementsByTagName("li");')
-    Output.append('\n')
-    Output.append('for (i = 0; i < li.length; i++) {')
-    Output.append('\tli[i].style.display = "none"')
-    Output.append('\t} //hides all elements on startup')
-    Output.append('\n')
-    Output.append('function SearchFunc() {')
-    Output.append('\t//this function is called by the search box when hte input is changed  ')
-    Output.append('\tvar input = document.getElementById("SearchBox");')
-    Output.append('\tvar filter = input.value.toUpperCase(); /*makes it so search is not case sensitive*/')
-    Output.append('\tvar ul = document.getElementById("IndexItems");')
-    Output.append('\tvar li = ul.getElementsByTagName("li");')
-    Output.append('\tvar i;')
-    Output.append('\t//sets up variables')
-    Output.append('\tif (filter == "") {')
-    Output.append('\t\tfor (i = 0; i < li.length; i++) {')
-    Output.append('\t\t\tli[i].style.display = "none";')
-    Output.append('\t\t}')
-    Output.append('\t}')
-    Output.append('\telse{')
-    Output.append('\t\tfor (i = 0; i < li.length; i++) {')
-    Output.append('\t\t\ta = li[i].getElementsByTagName("a")[0];')
-    Output.append('\t\t\tif (a.innerHTML.toUpperCase().indexOf(filter) > -1) {')
-    Output.append('\t\t\t\tli[i].style.display = "";')
-    Output.append('\t\t\t} ')
-    Output.append('else {')
-    Output.append('\t\t\t\tli[i].style.display = "none";')
-    Output.append('\t\t\t}')
-    Output.append('\t\t}')
-    Output.append('\t}')
-    Output.append('\t}')
-    Output.append('//END OF INDEX SETUP ')
-
-    return(Output)
-
-def Save_File(HTMLData,Destination):
-    try:
-        with open(Destination,'w') as File:
-            File.write(HTMLData)
-        #command = "explorer 'file:///" + Destination + "'"
-        print(f"File successfully saved to {Destination}")
-        return(True)
-    except:
-        print("Save Failed")
-        return(False)
-
-def Create_Doc(Data,Title,SaveDestination,ParentHeader = "h2",ChildHeader = "h3",HighlightColour="#1ED3B0",SidenavWidth=340,TopnavHeight=80,LogoLocation = ""):
+    def create_html_index(self):
+        if self.topNavHeight < 40:
+            self.htmlIndex = ['<!--no index included-->']
+            return
+        ids = self.parentIds + self.childIds
+        names = self.parentNames + self.childNames
+        listItems = []
+        output = ['<div class="topnav">']
+        output.append('\t<div class="SearchField">')
+        output.append('\t\t<input type="text" id = "SearchBox" onkeyup="SearchFunc()" placeholder="Search...">')
+        output.append('\t\t<div class="SearchResults">')
+        output.append('\t\t\t<ul id = "IndexItems">')
+        for x in range(len(ids)): 
+            listItems.append('\t\t\t\t<li><a href="#' + ids[x] + '">' + names[x] + '</a></li>')
+        listItems.sort()
+        for x in listItems:
+            output.append(x)
+        output.append('\t\t\t</ul>')
+        output.append('\t\t</div>')
+        output.append('\t</div>')
+        output.append("</div>")
+        output = '\n'.join(output)
+        self.htmlIndex = output
     
-    Data = Add_Tags(Data,ParentHeader)
-    Data = Add_Tags(Data,ChildHeader)
-    ContentsCSS = Create_CSS_Contents(HighlightColour,SidenavWidth)
-    IndexCSS = Create_CSS_Index(HighlightColour,TopnavHeight)
-    ContentsHTML = Create_HTML_Contents(Data,Prefix="qq",Suffix=">",ParentHeader=ParentHeader,ChildHeader=ChildHeader,LogoLocation = LogoLocation,LogoSize = SidenavWidth)
-    IndexHTML = Create_HTML_Index(Data,ParentHeader=ParentHeader,ChildHeader=ChildHeader,Prefix="qq",Suffix=">")
+    def create_css_index(self):
+        if self.topNavHeight<40:
+            return(["/*No CSS Included for topnav*/"])
+        # dislike this method but where there is variables thrown in it gets more 
+        # difficult to handle as a multi line string (due to fact {} brackets exist as part of css)
+        output= ['/*CSS for topnav*/']
+        output.append('.topnav {')
+        output.append('\tposition: fixed;')
+        output.append('\ttop: 0;')
+        output.append('\theight: ' + str(self.topNavHeight) +'px;')
+        output.append('\twidth: 105%;')
+        output.append('\tbackground-color: #f1f1f1;')
+        output.append('\tborder-bottom: 20px solid '+ self.highlight +';')
+        output.append('\toverflow: visible')
+        output.append('}')
+        output.append('#SearchBox {')
+        output.append('\tfloat: right;')
+        output.append('\tmargin-top: ' + str(self.topNavHeight/4) + 'px;')
+        output.append('\tmargin-right: 150px;')
+        output.append('\theight: 40px;')
+        output.append('\twidth: 200px;')
+        output.append('\tpadding: 11px;')
+        output.append('\tz-index: 2;')
+        output.append('}')
+        output.append('.SearchResults {')
+        output.append('\tdisplay: none;')
+        output.append('\tfloat: right;')
+        output.append('\tmargin-top: ' + str(self.topNavHeight/4 + 40) + 'px;')
+        output.append('\tmargin-right: -200px;')
+        output.append('\tmargin-left: 0px;')
+        output.append('\tmax-width: 200px;')
+        output.append('\tmin-width: 200px;')
+        output.append('\tz-index: 1;')
+        output.append('\tbackground-color: #e1e1e1;')
+        output.append('\toverflow-y: scroll;')
+        output.append('\theight: auto;')
+        output.append('\tmax-height: 375px;')
+        output.append('\tscrollbar-gutter: stable;')
+        output.append('\tmargin-left: 0px;')
+        output.append('}')
+        output.append('.SearchResults a {')
+        output.append('\tcolor: black;')
+        output.append('\ttext-decoration: none;')
+        output.append('\tdisplay: block;')
+        output.append('\tborder-top: solid #d1d1d1 2px;')
+        output.append('\tpadding-top: 6px;')
+        output.append('\tpadding-bottom: 6px;')
+        output.append('}')
+        output.append('.SearchResults a:hover {')
+        output.append( '\tbackground-color: ' + self.highlight + ';')
+        output.append('\tcolor: white')
+        output.append('}')
+        output.append('#SearchBox:focus-visible + .SearchResults{')
+        output.append('display: block; ')
+        output.append('}')
+        output.append('.SearchResults:hover{')
+        output.append('\tdisplay: block;')
+        output.append('}')
+        output.append('#IndexItems {')
+        output.append('\tlist-style-type: none;')
+        output.append('\tpadding: 5px;')
+        output.append('\tjustify-content: center;')
+        output.append(f'\tfont-size: {self.navFontSize}pt;')
+        output.append('\tfont-family: Arial, sans-serif ;')
+        output.append('}')
+        output.append('html {')
+        output.append('\tscroll-padding-top:' + str(self.topNavHeight + 20) + 'px;')
+        output.append('\tscrollbar-gutter: stable;')
+        output.append('}')
+        output.append('</style>\n')
+        output = '\n'.join(output)
+        # creation of css
+        self.cssIndex = output
+        # offsets start of text so that it does not disappear below top nav (as it sits on top)
+        self.data 
 
-    JS = Create_JS()
-    JS = "\n".join(JS)
+    def create_css_contents(self):
+        output = ['<style>']
+        output.append('/*CSS for contents*/')
+        output.append('.sidenav {')
+        output.append('\theight: 100%;')
+        output.append('\twidth: ' + str(self.sideNavWidth) + 'px;')
+        output.append('\tposition: fixed;')
+        output.append('\tz-index: 1;')
+        output.append('\ttop: 0;')
+        output.append('\tleft: 0;')
+        output.append('\tbackground-color: #f1f1f1;')
+        output.append('\toverflow-x: hidden;')
+        output.append('\tpadding: 20px;')
+        output.append('\tfont-family: Arial, sans-serif;')
+        output.append('}')
+        output.append('\n')
+        output.append('.sidenav a, .dropdown-btn {')
+        output.append('\tpadding: 6px 8px 6px;')
+        output.append('\ttext-decoration: none;')
+        output.append(f'\tfont-size: {self.navFontSize}pt;')
+        output.append('\tcolor: #424242;')
+        output.append('\tdisplay: block;')
+        output.append('\tborder: none;')
+        output.append('\tbackground: none;')
+        output.append('\twidth: 100%;')
+        output.append('\ttext-align: left;')
+        output.append('\tcursor: pointer;')
+        output.append('\toutline: none;')
+        output.append('\tfont-family: Arial, sans-serif;')
+        output.append('}')
+        output.append('\n')
+        output.append('.sidenav a:hover, .dropdown-btn:hover {')
+        output.append('\tcolor: #f1f1f1;')
+        output.append(f'\tbackground-color: {self.highlight};')
+        output.append('}')
+        output.append('\n')
+        output.append('.active {')
+        output.append(f'\tbackground-color: {self.highlight};')
+        output.append('\tcolor: white;')
+        output.append('}')
+        output.append('\n')
+        output.append('.dropdown-container {')
+        output.append('\tdisplay: none;')
+        output.append('\tpadding-left: 20px;')
+        output.append('\tpadding-right: 20px;')
+        output.append('\twidth:' + str(self.sideNavWidth - 40) + 'px;')
+        output.append('\tbackground-color: #e1e1e1;')
+        output.append('\tfont-family: Arial, sans-serif;')
+        output.append('}')
+        output.append('\n')
+        output.append('@media screen and (max-height: 450px) {')
+        output.append('\t.sidenav {padding-top: 0px;}')
+        output.append('\t.sidenav a {font-size:'+ f'{self.navFontSize}pt;'+'}')
+        output.append('}')
+        output.append('\n')
+        output = '\n'.join(output)
+        self.cssContents = output
 
-    CSS = ContentsCSS + IndexCSS
-    CSS = "\n".join(CSS)
-    HTML = IndexHTML+ ContentsHTML 
-    HTML = "\n".join(HTML)
-    
-    CSSEnd = Data.find("</style>")
-    DataCSS = Data[:CSSEnd] + "\n" + CSS +"\n"
-    
-    Found = True
-    Start = 0
-    End = 0
-    InsertStr = ' style="margin-left:' + str(SidenavWidth+30) + 'px; border-left: 20px solid ' + HighlightColour + '; padding-left: 20px"' 
-    while Found:
-        try:
-            Start = Data.index("<div class=",End) #May be better to replace ALL finds with index and try/except
-            End = Data.index(">",Start)
-            Data = Data[:End] + InsertStr + Data[End:]
+    def create_js(self): 
+        # this could be a constant as it does not care about other parts of class
+        # is a function ato maintain a sort of consistent flow though may revisit this 
+        output = ['//dropdown setup start']
+        output.append('var dropdown = document.getElementsByClassName("dropdown-btn"); ')
+        output.append('var i;')
+        output.append('for (i = 0; i < dropdown.length; i++) {')
+        output.append('\tdropdown[i].addEventListener("click", function() {')
+        output.append('\t\tthis.classList.toggle("active");')
+        output.append('\t\tvar dropdownContent = this.nextElementSibling;')
+        output.append('\t\tif (dropdownContent.style.display === "block") {')
+        output.append('\t\t\tdropdownContent.style.display = "none";')
+        output.append('\t\t} else {')
+        output.append('\t\t\tdropdownContent.style.display = "block";')
+        output.append('\t\t}')
+        output.append('\t});')
+        output.append('}')
+        output.append('//end of dropdown setup')
+        output.append('\n \n')
+        output.append('//start of index setup')
+        output.append('var ul = document.getElementById("IndexItems");')
+        output.append('var li = ul.getElementsByTagName("li");')
+        output.append('\n')
+        output.append('for (i = 0; i < li.length; i++) {')
+        output.append('\tli[i].style.display = "none"')
+        output.append('\t} //hides all elements on startup')
+        output.append('\n')
+        output.append('function SearchFunc() {')
+        output.append('\t//this function is called by the search box when hte input is changed  ')
+        output.append('\tvar input = document.getElementById("SearchBox");')
+        output.append('\tvar filter = input.value.toUpperCase(); /*makes it so search is not case sensitive*/')
+        output.append('\tvar ul = document.getElementById("IndexItems");')
+        output.append('\tvar li = ul.getElementsByTagName("li");')
+        output.append('\tvar i;')
+        output.append('\t//sets up variables')
+        output.append('\tif (filter == "") {')
+        output.append('\t\tfor (i = 0; i < li.length; i++) {')
+        output.append('\t\t\tli[i].style.display = "none";')
+        output.append('\t\t}')
+        output.append('\t}')
+        output.append('\telse{')
+        output.append('\t\tfor (i = 0; i < li.length; i++) {')
+        output.append('\t\t\ta = li[i].getElementsByTagName("a")[0];')
+        output.append('\t\t\tif (a.innerHTML.toUpperCase().indexOf(filter) > -1) {')
+        output.append('\t\t\t\tli[i].style.display = "";')
+        output.append('\t\t\t} ')
+        output.append('else {')
+        output.append('\t\t\t\tli[i].style.display = "none";')
+        output.append('\t\t\t}')
+        output.append('\t\t}')
+        output.append('\t}')
+        output.append('\t}')
+        output.append('//end of index setup')
+        output = '\n'.join(output)
+        self.js = output
+
+    def prettify_html(self): # returns directory saved to if successful
+        self.set_tag(self.tag)
+        self.data = self.data.replace(f'src="{self.ogRelPath}/',f'src="{self.newRelPath}/') 
+        # this is a one way process (difficult to undo). More efficient to just do it here instead
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # co-erce image positioning to be consistent here #
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        try: 
+            self.update_paths("") # updates all paths if logo has changed (for example)
         except:
-            Found = False
+            print("Target folder already exists")
+            return FileExistsError
+        
 
-    HTMLStart = Data.index("<div class")
+        self.create_css_contents()
+        self.create_css_index() 
+        # in css functions we open and close a unique style marker due as it is dififcult to tell (when indexing) if it is in a comment or not
+        dataCss = self.cssContents + '\n' + self.cssIndex 
 
-    DataHTML = Data[CSSEnd:HTMLStart] + "\n" + HTML + "\n"
+        self.create_html_contents()
+        self.create_html_index()
+        dataHtml = self.htmlContents + '\n' + self.htmlIndex
 
-    try: 
-        JSStart = Data.index("<script>")
-        DataJS = Data[HTMLStart:JSStart] + "\n" + JS + "\n</script>\n</html>"
-    except:
-        JSStart = Data.find("</html>")
-        DataJS = Data[HTMLStart:JSStart - 1] + "\n<script>\n" + JS + "\n</script>" 
+        self.create_js()
+        # need to update each word div to have a margin so that sidenav is not over the text
+        divUpdate = f' style="margin-left: {str(self.sideNavWidth+30)}px; border-left: 20px solid  {self.highlight}; padding-left: 20px"' 
+        start = 0
+        end = 0
 
-    Data = DataCSS + DataHTML + DataJS 
-    try:
-        TitleStart = Data.find("</head>")
-        Data = Data[:TitleStart] + f"<title>{Title}</title>\n" + Data[TitleStart:] 
+        while True: # replaces div classes to all have larger margins, may conflict if there is existing formatting there
+            try:
+                start = self.data.index('<div class=',end) # page marker in document
+                end = self.data.index('>',start)
+                self.data = self.data[:end] + divUpdate + self.data[end:]
+            except:
+                break # errors on index and then stops loop
+        try: # insert some paragraphs to offset text (due to topnav)
+            textStart = self.data.index('<div class') 
+            textStart = self.data.index('>',textStart)
+            self.data = self.data[:textStart+1] + ('<br>')*int(math.ceil(self.topNavHeight/15)) + self.data[textStart+1:]
+        except:
+            print("Warning: Failed to insert paragraphs to pad for topnav")
+            pass
+        try: # find start of css section
+            cssEnd = self.data.find('</head>')
+        except: # errors if not found
+            print("could not find css section in file")
+            return(False)
+        
+        try: # find start of html section
+            htmlStart = self.data.find("<div class")
+        except: # errors if not found
+            print("could not find html section in file")
+            return(False)
+        
+        try: # find start of javascript section
+            jsStart = self.data.index("<script>")
+            dataJs = self.data[htmlStart:jsStart] + "\n" + self.js + "\n</script>\n</html>"
+        except: # create new if not found
+            jsStart = self.data.find("</html>")
+            dataJs = self.data[htmlStart:jsStart - 1] + "\n<script>\n" + self.js + "\n</script>" 
 
-    except:
-        print("no head tag")
-        pass
-    
-    if Save_File(Data,SaveDestination): #This returns true or false to top level whilst still creating document
-        return(True)
-    else:
-        return(False)
+        dataCss = self.data[:cssEnd] + '\n' + dataCss + '\n'
+        dataHtml = self.data[cssEnd:htmlStart] + '\n' + dataHtml + '\n'
+
+        self.data = dataCss + dataHtml + dataJs
+        try: # replace title
+            titleStart = self.data.index('<title>')
+            titleEnd = self.data.index('</title>')
+            self.data = self.data[:titleStart] + f"<title>{self.newName}</title>\n" + self.data[titleEnd+8:]
+            # 8 is length of </title> (so that it does not end up doubled up
+        except: # add title if not found
+            titleStart = self.data.find("</head>")
+            self.data = self.data[:titleStart] + f"<title>{self.newName}</title>\n" + self.data[titleStart:] 
+        print("document created successfully")
+        try:
+            with open(f'{self.newDir }/{self.newName}.html','w') as File:
+                File.write(self.data)
+            #command = "explorer 'file:///" + Destination + "'"
+            print(f"File successfully saved to {self.newDir}")
+            return(self.newDir)
+        except Exception as ex:
+            print("Save Failed")
+            return(ex)
+
 
 

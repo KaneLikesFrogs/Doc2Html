@@ -1,65 +1,58 @@
 import tkinter as tk
-from tkinter import ttk,filedialog,colorchooser,messagebox
+from tkinter import ttk,filedialog,colorchooser,messagebox,font
 from PIL import Image,ImageTk
-
 import htmltools
 
-def Find_File():
-    FilePath = filedialog.askopenfilename(initialdir = "/",
+
+'''
+- Changed case method:
+    - camelCase for variables
+    - snake_case for functions
+    - PascalCase for classes/objects (including buttons/objects created by tkinter)
+'''
+
+def find_file():
+    filePath = filedialog.askopenfilename(initialdir = "/",
                                           title = "Select a filtered file to convert",
                                           filetypes=(("Filtered HTML File","*.htm*"),
                                                      ("All Files","*.*")))
-    #print(FilePath)
-    CurrentPath = FileEntry.get()
-    FileEntry.delete(0,len(CurrentPath))
-    FileEntry.insert(0,FilePath)
+    currentPath = FileEntry.get()
+    FileEntry.delete(0,len(currentPath))
+    FileEntry.insert(0,filePath)
 
-def Validate_File():
+def validate_file():
     try:
-        FilePath = FileEntry.get()
-        FilePath.index("htm")
-        RelativeLogoPath.config(state = "normal")
-        RelativeLogoButton.config(state = "normal")
+        filePath = FileEntry.get()
+        filePath.index("htm")
         FileEntry.config(highlightthickness = 0)
         return True
     except:
         FileEntry.config(highlightbackground = "red",highlightthickness = 1)
-        RelativeLogoPath.config(state = "disabled")
-        RelativeLogoButton.config(state = "disabled")
         return False
 
-def Find_Logo():
+def find_logo():
+    path = FileEntry.get()
     try:
-        Path = FileEntry.get()
-        initdir = Path[:Path.rindex("/")]
+        initdir = path[:path.rindex("/")]
     except:
-        FileEntry.config(highlightbackground = "red",highlightthickness = 1)
-        return False
-    LogoPath = filedialog.askopenfilename(initialdir = initdir,
+        initdir = 'C:/'
+    logoPath = filedialog.askopenfilename(initialdir = initdir,
                                     title = "Select an image",
                                     filetypes=(("ImageFile",("*.jpg","*.bmp","*.png")),
                                     ("All Files","*.*")))
-    RelativeLogoPath.delete(0,len(RelativeLogoPath.get()))
-    RelativeLogoPath.insert(0,LogoPath[len(initdir)+1:])
+    currentPath = LogoPath.get()
+    LogoPath.delete(0,len(currentPath))
+    LogoPath.insert(0,logoPath)
     return True
 
-def Load_Logo():
-    Path = FileEntry.get()
+def load_logo():
+    logoPath = LogoPath.get()
     try:
-        LogoPath = Path[:Path.rindex("/")] + "/" + RelativeLogoPath.get()
+        logo = Image.open(logoPath)
     except:
-        return False
-    #print(LogoPath)
-    try:
-        Logo = Image.open(LogoPath)
-        RelativeLogoPath.config(highlightthickness = 0)
-        #print("image opened")
-    except:
-        #print("failed")
-        RelativeLogoPath.config(highlightbackground = "red",highlightthickness = 1)
         Demo.itemconfig(DemoLogoRect,outline = "")
         return False
-    width, height = Logo.size
+    width, height = logo.size
     ratio = height/width
     width = int(SidenavSlider.get())
     height = int(width*ratio)
@@ -67,32 +60,32 @@ def Load_Logo():
     Demo.itemconfig(DemoLogoRect,outline = "black")
     return True
 
-def Choose_Colour():
-    ColourCode = colorchooser.askcolor(title = "Choose Colour for accenting and higlighting")
+def choose_colour():
+    colourCode = colorchooser.askcolor(title = "Choose Colour for accenting and higlighting")
     try:
-        ColourButton.config(background = str(ColourCode[1]))
-        CurrentColour = ColourEntry.get()
-        ColourEntry.delete(0,len(CurrentColour))
-        ColourEntry.insert(0,str(ColourCode[1]))
-        Demo.itemconfig(DemoWindow,outline = ColourCode[1])
+        ColourButton.config(background = str(colourCode[1]))
+        currentColour = ColourEntry.get()
+        ColourEntry.delete(0,len(currentColour))
+        ColourEntry.insert(0,str(colourCode[1]))
+        Demo.itemconfig(DemoWindow,outline = colourCode[1])
         return True
     except:
         return False
 
-def Type_Colour():
+def type_colour():
     try:
         ColourButton.config(background=ColourEntry.get())
         Demo.itemconfig(DemoWindow,outline = ColourEntry.get())
         ColourEntry.config(highlightthickness = 0)
         return True
     except:
-        CurrentColour = ColourEntry.get()
-        ColourEntry.delete(0,len(CurrentColour))
+        currentColour = ColourEntry.get()
+        ColourEntry.delete(0,len(currentColour))
         ColourEntry.insert(0,"")
         ColourEntry.config(highlightbackground = "red",highlightthickness = 1)
         return False
 
-def Update_Canvas(Pos=0):
+def update_canvas(pos=0):
     VerticalLinePos = float(SidenavSlider.get())
     HorizLinePos = float(TopnavSlider.get())
     
@@ -109,35 +102,35 @@ def Update_Canvas(Pos=0):
     Demo.itemconfig(DemoWindow,outline = ColourHex)
     Demo.coords(DemoWindow,490,280,VerticalLinePos+5,HorizLinePos+5)
     Demo.coords(DemoSearch,475,HorizLinePos/4,425,HorizLinePos/4 + 10)
-    Load_Logo()
+    load_logo()
 
-def Update_Canvas_From_Textbox():
+def update_canvas_from_textbox():
     try:
-        TopnavHeight = int(TopnavEntry.get())
+        topnavHeight = int(TopnavEntry.get())
         TopnavEntry.config(highlightthickness=0)
     except:
         TopnavEntry.config(highlightthickness=1,highlightbackground="red")
         return False
     try:
-        SidenavWidth =int(SidenavEntry.get())
+        sidenavWidth =int(SidenavEntry.get())
         SidenavEntry.config(highlightthickness=0)
     except:
         SidenavEntry.config(highlightbackground="red",highlightthickness=1)
         return False
-    HorizLinePos = TopnavHeight/4
-    TopnavSlider.set(HorizLinePos)
-    VerticalLinePos = SidenavWidth/4
-    SidenavSlider.set(VerticalLinePos)
-    Demo.coords(DemoWindow,490,280,VerticalLinePos+5,HorizLinePos+5)
-    Demo.coords(DemoSearch,475,HorizLinePos/4,425,HorizLinePos/4 + 10)
-    Load_Logo()
+    horizLinePos = topnavHeight/4
+    TopnavSlider.set(horizLinePos)
+    verticalLinePos = sidenavWidth/4
+    SidenavSlider.set(verticalLinePos)
+    Demo.coords(DemoWindow,490,280,verticalLinePos+5,horizLinePos+5)
+    Demo.coords(DemoSearch,475,horizLinePos/4,425,horizLinePos/4 + 10)
+    load_logo()
     return True
 
-def Name_Check():
-    Label = NewNameEntry.get()
-    InvalidChars = ['"','*','?','<','>',':','|','/','\\']
-    for x in InvalidChars:
-        index = Label.find(x)
+def name_check():
+    label = NewNameEntry.get()
+    invalidChars = ['"','*','?','<','>',':','|','/','\\']
+    for x in invalidChars:
+        index = label.find(x)
         if index > 0:
             NewNameEntry.config(highlightbackground = "red",highlightthickness = 1)
             return False
@@ -146,105 +139,143 @@ def Name_Check():
             continue
     return True
 
-def Create_File():
-    if Validate_File():
-        Path = FileEntry.get()
+def font_check():
+    try:
+        fontSize = int(FontSizeEntry.get())
+        FontSizeEntry.config(highlightthickness=0)
+        return True
+    except:
+        FontSizeEntry.config(highlightthickness=1,highlightbackground="red")
+        return False
+
+def create_file():
+    if validate_file():
+        path = FileEntry.get()
     else:
         return False    
-    if Load_Logo():
-        LogoPath = RelativeLogoPath.get()
-        print("Logo valid")
-    else:
-        LogoPath = ""
-        print("Logo not valid,skipping")
-    if Update_Canvas_From_Textbox: 
-        Topnav = int(TopnavEntry.get())
-        Sidenav = int(SidenavEntry.get())
+    if update_canvas_from_textbox: 
+        topNav = int(TopnavEntry.get())
+        sideNav = int(SidenavEntry.get())
     else:
         print("Failed size check")
         return False
-    if Type_Colour:
-        Colour = ColourEntry.get()
+    if type_colour:
+        colour = ColourEntry.get()
     else:
         print("Failed colour check")
         return False
-    if Name_Check():
-        Destination = Path[:Path.rindex("/")] + "/" + NewNameEntry.get()
+    if load_logo():
+        logoPath = LogoPath.get()
+        print("Logo valid")
+    else:
+        logoPath = ""
+    if name_check():
+        destination = NewNameEntry.get()
     else:
         print("Failed name check")
         return False
-    try:
-        Destination.rindex('.htm')
-    except:
-        Destination = Destination + '.htm'
-    if Destination == "":
-        Destination = FileEntry.get()
-    File = open(Path)
-    Name = NewNameEntry.get().rstrip(".htm")
-    print(Name)
-    print(Destination)
-    Data = str(File.read())
-    return htmltools.Create_Doc(Data,Name,Destination,"h2","h3",Colour,Sidenav,Topnav,LogoPath)
     
+    name = destination
+    output = htmltools.Manual(original=path,newName=name)
+    output.logoPath = logoPath
+    output.sideNavWidth = sideNav
+    output.topNavHeight = topNav
+    output.highlight = colour
+    try:
+        output.navFontSize = FontSizeEntry.get()
+    except:
+        pass
+    try:
+        output.nameBlacklist = NameBlacklistEntry.get().split(',')
+        output.nameCutoff = NameCutoffEntry.get().split(',')
+    except:
+        pass
+    try:
+        output.prettify_html()
+        dir = output.newDir
+        messagebox.showinfo(message=f"File successfully created and saved to {dir}")
+    except:
+        return False
+    
+# ~~~~~~~~~~~ Variables + Defaults ~~~~~~~~~~~
 
-#Everything below this is the layout options 
+filePath = ""
+topnavHeight = 80
+horizLinePos = topnavHeight/4
+sidenavWidth = 340
+verticalLinePos = sidenavWidth/4
+colourHex = "#604D81"
+fontSize = 16
+defBg = '#e1e1e1'
+
 root = tk.Tk()
-root.title("Filtered HTML Doc to HTML Help File")
-root.configure(background = "#f1f1f1")
-MinWidth = 800
-MinHeight = 850
-ScreenWidth = root.winfo_screenwidth()
-ScreenHeight = root.winfo_screenheight()
-root.minsize(MinWidth, MinHeight)
-root.geometry(f"{MinWidth}x{MinHeight}+{round(ScreenWidth/2 - MinWidth/2)}+{round(ScreenHeight/2 - MinHeight/2)}") 
+root.title("HTML Doc to HTML Help File")
+minWidth = 750
+minHeight = 950
+screenWidth = root.winfo_screenwidth()
+screenHeight = root.winfo_screenheight()
+root.minsize(minWidth, minHeight)
+root.geometry(f"{minWidth}x{minHeight}+{round(screenWidth/2 - minWidth/2)}+{round(screenHeight/2 - minHeight/2)}") 
+root.configure(bg=defBg)
 
-FileControl = tk.Frame(root,width = 200, height = 10, background = '#e1e1e1')
+# ~~~~~~~~~~~ Control Grids ~~~~~~~~~~~
+
+FileControl = tk.Frame(root,width = 200, height = 10, background = defBg)
 FileControl.grid(row = 0, column = 0,pady=10,padx=30,sticky = "w")
 
-FilePath = ""
-TopnavHeight = 80
-HorizLinePos = TopnavHeight/4
-SidenavWidth = 340
-VerticalLinePos = SidenavWidth/4
+HTMLControls = tk.Frame(root,width = 800, height = 200,background = defBg)
+HTMLControls.grid(row = 1, column = 0,pady=10,padx=30,sticky = "n")
 
-FileEntry = tk.Entry(FileControl,width=100,textvariable=FilePath,validate = "focusout",validatecommand=Validate_File)
-FileButton = tk.Button(FileControl,text = "Search",width = 5, height = 1, command = Find_File)
-FileLabel = tk.Label(FileControl,text = "File Selected:",background = '#e1e1e1')
-SubmitFile = tk.Button(FileControl, text = "Submit",width = 5, height = 1, command = Validate_File)
+SubmitControls = tk.Frame(root,width=400,height = 30,background = defBg)
+SubmitControls.grid(row = 4,column = 0,pady=10,padx=30,sticky = "n")
+
+# ~~~~~~~~~~~ Control Definitions ~~~~~~~~~~~
+
+FileEntry = tk.Entry(FileControl,width=100,textvariable=filePath,validate = "focusout",validatecommand=validate_file)
+FileButton = tk.Button(FileControl,text = "Search",width = 5, height = 1, command = find_file)
+FileLabel = tk.Label(FileControl,text = "File Selected:",background = defBg)
+SubmitFile = tk.Button(FileControl, text = "Submit",width = 5, height = 1, command = validate_file)
+# Accenting/Highlights
+ColourButton = tk.Button(HTMLControls, height = 1, width = 2,background = colourHex,command = choose_colour)
+ColourLabel = tk.Label(HTMLControls,text = "Colour (Highlights and Accents):",background = defBg)
+ColourEntry = tk.Entry(HTMLControls,width = 12,validate = "focusout",validatecommand = type_colour,textvariable = colourHex)
+# Topnav adjustments
+TopnavEntry = tk.Entry(HTMLControls,width = 5, textvariable = topnavHeight,validate = "focusout",validatecommand = update_canvas_from_textbox)
+TopnavLabel = tk.Label(HTMLControls,text = "Topnav Height (px) \n(Values less than 40px will remove the top bar)",background = defBg)
+# Sidenav adjustments 
+SidenavEntry = tk.Entry(HTMLControls,width = 5,textvariable = sidenavWidth,validate = "focusout",validatecommand = update_canvas_from_textbox)
+SidenavLabel = tk.Label(HTMLControls,text = "Sidenav Width (px)",background = defBg)
+# Nav text size adjustments
+FontSizeEntry = tk.Entry(HTMLControls,width = 5,textvariable = fontSize,validate = "focusout",validatecommand = font_check)
+FontSizeLabel = tk.Label(HTMLControls,text="Font Size (pt) :",background=defBg)
+# Logo path changes
+LogoPath = tk.Entry(HTMLControls,width = 50)
+LogoLabel = tk.Label(HTMLControls,text="Path to logo (optional):",background = defBg)
+LogoButton = tk.Button(HTMLControls,text = "Search",width = 5, height = 1 ,command = find_logo)
+Submit = tk.Button(HTMLControls,width = 5, text = "Submit",command=load_logo)
+# Description of cutoff/blacklist elements
+BlacklistAndCutoffLabel = tk.Label(HTMLControls,
+                                   text = 
+                                   '''Can adjust the bookmark and menu item names with options below\nSeperate items with commas (,)''' ,
+                                   background = defBg)
+# Name blacklist
+NameBlacklistEntry = tk.Entry(HTMLControls,validate = 'focusout')
+NameBlacklistLabel = tk.Label(HTMLControls,text = "Characters/Strings to remove",background = defBg)
+# Name cutoff
+NameCutoffEntry = tk.Entry(HTMLControls,validate = 'focusout')
+NameCutoffLabel = tk.Label(HTMLControls,text = "Characters/Strings to use as cutoff\n(Uses everything AFTER cutoff)",background = defBg)
+# Create file buttons
+NewNameLabel = tk.Label(SubmitControls,text = "New Name:",background = defBg)
+NewNameEntry = tk.Entry(SubmitControls,width = 50,validate = 'focusout',validatecommand=name_check)
+NewNameConfirm = tk.Button(SubmitControls,width = 12, text = "Create HTML\nFile",command=create_file)
+
+# ~~~~~~~~~~~ Control Positioning ~~~~~~~~~~~
 
 FileLabel.grid(row = 0,column = 0,sticky = "w",padx = 5,pady = 5)
 FileEntry.grid(row = 1,column = 0,padx = 5,pady = 0)
 FileButton.grid(row = 1,column = 1,padx = 5,pady = 5)
 SubmitFile.grid(row = 2,column= 0,padx = 5, pady = 5)
 
-HTMLControls = tk.Frame(root,width = 800, height = 200,background = '#e1e1e1')
-HTMLControls.grid(row = 1, column = 0,pady=10,padx=30,sticky = "n")
-
-SubmitControls = tk.Frame(root,width=400,height = 30,background = '#e1e1e1')
-SubmitControls.grid(row = 4,column = 0,pady=10,padx=30,sticky = "n")
-
-ColourHex = "#1ed3b0"
-#CHANGE COLOUR OF ACCENTING/HIGHLIGHTS
-ColourButton = tk.Button(HTMLControls, height = 1, width = 2,background = '#1ED3B0',command = Choose_Colour)
-ColourLabel = tk.Label(HTMLControls,text = "Colour (Highlights and Accents):",background = '#e1e1e1')
-ColourEntry = tk.Entry(HTMLControls,width = 12,validate = "focusout",validatecommand = Type_Colour,textvariable = ColourHex)
-#ADJUST SIZE OF TOPBAR/INDEX SEARCH
-TopnavEntry = tk.Entry(HTMLControls,width = 5, textvariable = TopnavHeight,validate = "focusout",validatecommand = Update_Canvas_From_Textbox)
-TopnavLabel = tk.Label(HTMLControls,text = "Topnav Height (px) \n(Values less than 40px will remove the top bar)",background = '#e1e1e1')
-#ADJUST SIZE OF SIDEBAR/CONTENTS
-SidenavEntry = tk.Entry(HTMLControls,width = 5,textvariable = SidenavWidth,validate = "focusout",validatecommand = Update_Canvas_From_Textbox)
-SidenavLabel = tk.Label(HTMLControls,text = "Sidenav Width (px)",background = '#e1e1e1')
-#CHANGE PATH TO LOGO
-RelativeLogoPath = tk.Entry(HTMLControls,width = 50,state = "disabled")
-RelativeLogoLabel = tk.Label(HTMLControls,text="Relative Path to logo (optional):",background = '#e1e1e1')
-RelativeLogoButton = tk.Button(HTMLControls,text = "Search",width = 5, height = 1 ,command = Find_Logo,state = "disabled")
-Submit = tk.Button(HTMLControls,width = 5, text = "Submit",command=Load_Logo)
-#CREATE FILE
-NewNameLabel = tk.Label(SubmitControls,text = "New File Name:",background = '#e1e1e1')
-NewNameEntry = tk.Entry(SubmitControls,width = 50,validate = 'focusout',validatecommand=Name_Check)
-NewNameConfirm = tk.Button(SubmitControls,width = 12, text = "Create HTML\nFile",command=Create_File)
-
-#POSITIONING OF CONTROL ELEMENTS
 ColourButton.grid(row = 0,column = 0,padx = 5,pady = 5)
 ColourLabel.grid(row = 0,column = 1,padx = 5,pady = 5)
 ColourEntry.grid(row = 0,column = 2, padx = 5, pady = 5)
@@ -255,28 +286,39 @@ TopnavLabel.grid(row = 1, column = 1, padx = 5, pady = 5)
 SidenavEntry.grid(row = 2,column = 0, padx = 5, pady = 5)
 SidenavLabel.grid(row = 2, column = 1, padx = 5, pady = 5)
 
-RelativeLogoLabel.grid(row = 3, column = 0, padx = 5 ,pady = 0,columnspan = 2,sticky = "w")
-RelativeLogoPath.grid(row = 4, column = 0, pady = 5, padx = 5,columnspan = 3,sticky = "w")
-RelativeLogoButton.grid(row = 4,column = 2, pady = 5, padx = 5)
+FontSizeEntry.grid(row = 3,column = 0, padx = 5, pady = 5)
+FontSizeLabel.grid(row = 3,column = 1, padx = 5, pady = 5)
 
-Submit.grid(row = 5,column = 1, padx = 5, pady = 5)
+BlacklistAndCutoffLabel.grid(row=4,column = 0, padx = 5, pady = 5,columnspan = 3,sticky = "n")
+
+NameBlacklistEntry.grid(row = 5,column = 0, padx = 5, pady =5)
+NameBlacklistLabel.grid(row = 5,column = 1, padx = 5, pady = 5,columnspan = 2,sticky = "w")
+
+NameCutoffEntry.grid(row = 6,column = 0, padx = 5, pady = 5)
+NameCutoffLabel.grid(row = 6,column = 1, padx = 5, pady = 5,columnspan = 2,sticky = "w")
+
+LogoLabel.grid(row = 7, column = 0, padx = 5 ,pady = 0,columnspan = 2,sticky = "w")
+LogoPath.grid(row = 8, column = 0, pady = 5, padx = 5,columnspan = 3,sticky = "w")
+LogoButton.grid(row = 8,column = 2, pady = 5, padx = 5)
+Submit.grid(row = 9,column = 1, padx = 5, pady = 5)
 
 NewNameLabel.grid(row = 0,column =0, padx = 5, pady = 5,sticky = "w")
 NewNameEntry.grid(row = 1,column =0, padx = 5, pady = 5)
 NewNameConfirm.grid(row = 2,column=0, padx = 5, pady = 5)
 
-#DEFAULT VALUES
-ColourEntry.insert(0,'#1ED3B0')
-TopnavEntry.insert(0,TopnavHeight)
-SidenavEntry.insert(0,SidenavWidth)
+# ~~~~~~~~~~~ Setup Demo Frame ~~~~~~~~~~~
 
-#EXAMPLE FRAME
+# Applying defaults
+ColourEntry.insert(0,colourHex)
+TopnavEntry.insert(0,topnavHeight)
+SidenavEntry.insert(0,sidenavWidth)
+FontSizeEntry.insert(0,fontSize)
+# Example/Demo Frame
 ExampleFrame = tk.Frame (root,width = 490, height = 280, background = 'white',highlightbackground = 'black',highlightthickness = 2)
-ExampleLabel = tk.Label(root,text = '^This is an example window at 1:4 scale of a 1920x1080 display')
+ExampleLabel = tk.Label(root,text = '^This is an example window at 1:4 scale of a 1920x1080 display',background=defBg)
 
 ExampleFrame.grid(row = 2, column = 0,padx=30,sticky = "n")
 ExampleLabel.grid(row = 3, column = 0,padx=30,sticky = "n")
-
 
 SidenavSlider = tk.Scale(ExampleFrame, 
                         from_ = 0,
@@ -288,8 +330,8 @@ SidenavSlider = tk.Scale(ExampleFrame,
                         sliderlength=10,
                         showvalue = 0,
                         resolution=0.25,
-                        variable = VerticalLinePos,
-                        command = Update_Canvas)
+                        variable = verticalLinePos,
+                        command = update_canvas)
 TopnavSlider = tk.Scale(ExampleFrame,
                         from_ = 0, 
                         to_ = 270, 
@@ -300,8 +342,8 @@ TopnavSlider = tk.Scale(ExampleFrame,
                         sliderlength = 10,
                         showvalue = 0,
                         resolution=0.25,
-                        variable = HorizLinePos,
-                        command = Update_Canvas)
+                        variable = horizLinePos,
+                        command = update_canvas)
 
 TopnavSlider.set(20)
 SidenavSlider.set(85)
@@ -312,25 +354,22 @@ SidenavSlider.grid(row = 0,column = 1,sticky = "w")
 TopnavSlider.grid(row = 1,column = 0,sticky ="n")
 Demo.grid(row = 1,column = 1,sticky="nw")
 
-
 DemoWindow = Demo.create_rectangle(490,
                                    280,
-                                   VerticalLinePos+5,
-                                   HorizLinePos+5,
-                                   outline = ColourHex, 
+                                   verticalLinePos+5,
+                                   horizLinePos+5,
+                                   outline = colourHex, 
                                    fill = 'white',
                                    width = 5)
 DemoSearch = Demo.create_rectangle(480-5,
                                    5,
                                    480-55,
                                    15,
-                                   fill = "white"
-                                   )
+                                   fill = "white")
 DemoLogoRect = Demo.create_rectangle(2,
                                      2,
                                      90,
                                      20,
                                      fill = '',
                                      outline = '')
-
 root.mainloop()

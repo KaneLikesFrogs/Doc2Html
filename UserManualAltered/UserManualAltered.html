@@ -1,0 +1,921 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Calibri Light";
+	panose-1:2 15 3 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-top:18.0pt;
+	margin-right:0cm;
+	margin-bottom:4.0pt;
+	margin-left:0cm;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:20.0pt;
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;
+	font-weight:normal;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:8.0pt;
+	margin-right:0cm;
+	margin-bottom:4.0pt;
+	margin-left:0cm;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;
+	font-weight:normal;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-top:8.0pt;
+	margin-right:0cm;
+	margin-bottom:4.0pt;
+	margin-left:0cm;
+	line-height:107%;
+	page-break-after:avoid;
+	font-size:14.0pt;
+	font-family:"Calibri",sans-serif;
+	color:#2F5496;
+	font-weight:normal;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Times New Roman",serif;
+	color:#2F5496;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+
+<style>
+/*CSS for contents*/
+.sidenav {
+	height: 100%;
+	width: 250px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #f1f1f1;
+	overflow-x: hidden;
+	padding: 20px;
+	font-family: Arial, sans-serif;
+}
+
+
+.sidenav a, .dropdown-btn {
+	padding: 6px 8px 6px;
+	text-decoration: none;
+	font-size: 14pt;
+	color: #424242;
+	display: block;
+	border: none;
+	background: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+	outline: none;
+	font-family: Arial, sans-serif;
+}
+
+
+.sidenav a:hover, .dropdown-btn:hover {
+	color: #f1f1f1;
+	background-color: #604D81;
+}
+
+
+.active {
+	background-color: #604D81;
+	color: white;
+}
+
+
+.dropdown-container {
+	display: none;
+	padding-left: 20px;
+	padding-right: 20px;
+	width:210px;
+	background-color: #e1e1e1;
+	font-family: Arial, sans-serif;
+}
+
+
+@media screen and (max-height: 450px) {
+	.sidenav {padding-top: 0px;}
+	.sidenav a {font-size:14pt;}
+}
+
+
+/*CSS for topnav*/
+.topnav {
+	position: fixed;
+	top: 0;
+	height: 80px;
+	width: 105%;
+	background-color: #f1f1f1;
+	border-bottom: 20px solid #604D81;
+	overflow: visible
+}
+#SearchBox {
+	float: right;
+	margin-top: 20.0px;
+	margin-right: 150px;
+	height: 40px;
+	width: 200px;
+	padding: 11px;
+	z-index: 2;
+}
+.SearchResults {
+	display: none;
+	float: right;
+	margin-top: 60.0px;
+	margin-right: -200px;
+	margin-left: 0px;
+	max-width: 200px;
+	min-width: 200px;
+	z-index: 1;
+	background-color: #e1e1e1;
+	overflow-y: scroll;
+	height: auto;
+	max-height: 375px;
+	scrollbar-gutter: stable;
+	margin-left: 0px;
+}
+.SearchResults a {
+	color: black;
+	text-decoration: none;
+	display: block;
+	border-top: solid #d1d1d1 2px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+.SearchResults a:hover {
+	background-color: #604D81;
+	color: white
+}
+#SearchBox:focus-visible + .SearchResults{
+display: block; 
+}
+.SearchResults:hover{
+	display: block;
+}
+#IndexItems {
+	list-style-type: none;
+	padding: 5px;
+	justify-content: center;
+	font-size: 14pt;
+	font-family: Arial, sans-serif ;
+}
+html {
+	scroll-padding-top:100px;
+	scrollbar-gutter: stable;
+}
+</style>
+
+<title>UserManualAltered</title>
+</head>
+
+<body lang=EN-GB link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+
+
+<div class="sidenav">
+	<a href="https://github.com/KaneLikesFrogs" target="_blank">
+	<img src="UserManualAltered_files/bannertransparent.png" width="250">
+	</a>
+<p><br></p>
+	<a href="#qq_introduction">Introduction</a>
+	<a href="#qq_convertingadocument">Converting a Document</a>
+	<a href="#qq_changingheadertarget"> Changing Header Target</a>
+	<button class="dropdown-btn">Trimming NavMenu Titles </button>
+	 	<div class="dropdown-container">
+	 	<a href="#qq_trimmingnavmenutitles">Trimming NavMenu Titles </a>
+	 	<a href="#qq_trimmingexample">Trimming Example</a>
+	 	</div>
+	<a href="#qq_addingalogo"> Adding a Logo</a>
+	<a href="#qq_listofotheradjustablevalues"> List of Other Adjustable Values</a>
+	<a href="#qq_scriptforcreationofthisdocument"> Script for Creation of This Document</a>
+	<p><br></p>
+	<p><br></p>
+</div>
+<div class="topnav">
+	<div class="SearchField">
+		<input type="text" id = "SearchBox" onkeyup="SearchFunc()" placeholder="Search...">
+		<div class="SearchResults">
+			<ul id = "IndexItems">
+				<li><a href="#qq_addingalogo"> Adding a Logo</a></li>
+				<li><a href="#qq_changingheadertarget"> Changing Header Target</a></li>
+				<li><a href="#qq_convertingadocument">Converting a Document</a></li>
+				<li><a href="#qq_introduction">Introduction</a></li>
+				<li><a href="#qq_listofotheradjustablevalues"> List of Other Adjustable Values</a></li>
+				<li><a href="#qq_scriptforcreationofthisdocument"> Script for Creation of This Document</a></li>
+				<li><a href="#qq_trimmingexample">Trimming Example</a></li>
+				<li><a href="#qq_trimmingnavmenutitles">Trimming NavMenu Titles </a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class=WordSection1 style="margin-left: 280px; border-left: 20px solid  #604D81; padding-left: 20px"><br><br><br><br><br><br>
+
+<h1>User Manual for Converting Files</h1>
+
+<h2><a name="qq_introduction"></a>Introduction</h2>
+
+<p class=MsoNormal>This document contains examples of how to use the DocToHTML
+program or Help File Creator. This document focuses on using the tools found
+htmltools.py independently of the gui program (as the gui is designed to be
+more straight forward and ideally requires less technical knowhow). This
+document itself has been converted to act as an example of it working. There is
+a plain version as well to demonstrate the difference between them. <img
+width=340 height=254 src="UserManualAltered_files/image001.png"></p>
+
+<p class=MsoNormal>Currently there is some difficulty in handling of images and
+this is mitigated by either having the images set to in line with text. This is
+because when exporting a word document as HTML it does not include any
+information about the “wrap-method” of the image and only the image itself. If
+it is not set to “in line with text” then it instead appears as part of the
+paragraph and will not appear where it does in the document version. </p>
+
+<p class=MsoNormal>It is also worth noting that any EXISTING bookmarks/links in
+the document will remain. For this reason a “tag” is prepended to any bookmarks
+created. By default this tag is “qq_” as it uses 2 letters that are (typically)
+unlikely to exist alongside one another </p>
+
+<h2><a name="qq_convertingadocument"></a>Converting a Document</h2>
+
+<p class=MsoNormal>To use this program, you will need to have a word document
+you want to convert. It will need consistent header styling throughout. Can
+then go to “Save As…” and change the “Save As Type” field to be a web page
+(*.htm,*html) or filtered webpage. Note that filtered htmls will be smaller in
+file size and less likely to have issues as there will be fewer conditional
+aspects to the styling. </p>
+
+<p class=MsoNormal>After saving the document can write the following code. The
+below example is if you wish to do this outside of htmltools:</p>
+
+<p class=MsoListParagraphCxSpFirst style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>import
+htmltools</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>path =
+'path/to/htmlcreated'</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>Example =
+htmltools.Manual(path,'NameOfFile')</span></p>
+
+<p class=MsoListParagraphCxSpLast style='margin-left:54.0pt;text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;line-height:107%;font-family:Consolas'>Example.prettify_html()</span></p>
+
+<p class=MsoNormal>This on its own will spruce up an otherwise plain file. It
+will create a sort of frame for the document to live in and will include a
+navmenu on the left (if there are subheadings there will be a dropdown for
+them) and a searchbox in the top left for finding specific items. It will also
+include a logo. (see <a href="#_Example_–_3">below</a> if you want to
+remove/change this)</p>
+
+<p class=MsoNormal>The “NameOfFile” parameter will be the name of the directory
+where all parts of the result are created. This is just a name and not a path.
+If the name is invalid then an error will be returned. Note that it will ALSO
+error if the target folder already exists (to prevent deleting important files)
+</p>
+
+<p class=MsoNormal>The other sections here are examples of how to tweak parts
+of this to suit more specialist needs and act as a way to help troubleshoot
+issues&#160; </p>
+
+<h2><a name="qq_changingheadertarget"></a>Example 1 - Changing Header Target</h2>
+
+<h2>&nbsp;</h2>
+
+<p class=MsoNormal>This is the first instance of heading 2 and a link will be
+automatically created to link here. The title will be excluded from the nav
+menus as it will be tagged with &lt;h1&gt; in the document. If wanting to
+change this can change by calling the “Manual” object and changing the
+‘childHeading’ or ‘parentHeading’ parameters (depending on if you want it to
+appear in a drop down)</p>
+
+<p class=MsoNormal>By default, parentHeading is set to ‘h2’ and childHeading is
+set to ‘h3’. Can adjust the code below </p>
+
+<p class=MsoListParagraphCxSpFirst style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>path =
+‘path/to/target/file.htm’ </span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>manualEx =
+Manual(path,'example')</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>manualEx.childHeading
+= 'h2'</span></p>
+
+<p class=MsoListParagraphCxSpLast style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>manualEx.parentHeading
+= 'h3'</span></p>
+
+<p class=MsoNormal>If it is not working as expected then open the saved HTML
+file into a text editor and make sure the headers are labelled in the expected
+manner. If they are not then you can change the variables as described above to
+better suit your needs </p>
+
+<h2><a name="qq_trimmingnavmenutitles"></a><a name="_Example_2_-Trimming"></a>Example 2 -Trimming NavMenu Titles </h2>
+
+<p class=MsoNormal>Some cases may want to trim names as they appear in the nav
+menus. Additionally, you may also want to change the tags themselves to make
+the URL appear less jumbled.</p>
+
+<p class=MsoNormal>Similar to the previous example these can be altered by
+changing values inside the Manual class by just calling them. </p>
+
+<p class=MsoNormal>These act as rules for names and tags. It is worth noting
+that any name rules will ALSO be applied to the tags first before any tags are
+applied. </p>
+
+<p class=MsoNormal>This can be useful if chapters are laid out with “Chapter x
+–“ at the start of each one for readability as this can be trimmed out or
+removed</p>
+
+<p class=MsoNormal>Any chapters without a name are also trimmed automatically Below
+is a screenshot of this document in MSWord where there is an extra empty
+heading (there won’t be one on the help document html version of this document)</p>
+
+<p class=MsoNormal><img border=0 width=307 height=86 id="Picture 1"
+src="UserManualAltered_files/image002.png"></p>
+
+<h3><a name="qq_trimmingexample"></a>Trimming Example</h3>
+
+<p class=MsoNormal>Below is an example of how this trimming works in practice.
+The result can be seen in the picture, also below</p>
+
+<p class=MsoListParagraphCxSpFirst style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example =
+Manual(path,'example')</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example.nameBlacklist
+= []</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example.nameCutoff
+= ['-','\u2013'] </span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'># this will
+mean all the navmenu names won’t have ‘Example X –‘ at the start as it’ll be
+cutoff</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'># \u2013 is
+the unicode for an em-dash as MSWord often (but not always) autocorrects dashes
+to these</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example.tagBlacklist
+= ['Titles'] ‘this means the tags won’t contain the word ‘titles’ so the
+bookmark for example 2 will become “qq_trimmingnavmenu”</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example.tagCutoff
+= []</span></p>
+
+<p class=MsoListParagraphCxSpLast style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:normal'><span style='font-size:10.0pt;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;font-family:Consolas'>example.prettify_html()</span></p>
+
+<p class=MsoNormal><img border=0 width=470 height=273 id="Group 2"
+src="UserManualAltered_files/image003.png"></p>
+
+<h2><a name="qq_addingalogo"></a><a name="_Example_–_3"></a>Example 3 – Adding a Logo</h2>
+
+<p class=MsoNormal>In the case that this is used for changing a manual to have
+a bit more of a refined look than just a wall of text can include a path to a
+logo. As with other cases can update the objects ‘logoPath’ value to match
+that. If logoPath is set to “” then that removes it from the resulting
+document. By default, however the logo that is used is the one that is simply
+called logo in the same directory as htmltools.py. </p>
+
+<p class=MsoNormal>This file can be replaced or the path variable can simply be
+changed. Below is how one would go about changing the path variable. When
+“prettify_html()” is called then it will sort out any of the other parts that
+are affected as a knock on of this.</p>
+
+<p class=MsoNormal>Can also define a link for the logo to go to (such as
+company site). Setting logoLink to “” will cause the logo (if present) to
+become inert and just not go anywhere</p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt'><span
+style='font-size:10.0pt;line-height:107%;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;line-height:107%;font-family:Consolas'>Example
+= Manual(path,'example')</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-size:10.0pt;line-height:107%;font-family:Symbol'>&#160;<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-size:10.0pt;line-height:107%;font-family:Consolas'>Example.logoPath
+= ‘’</span></p>
+
+<p class=MsoListParagraphCxSpMiddle><span style='font-size:10.0pt;line-height:
+107%;font-family:Consolas'># this will remove logo when prettify_html is called</span></p>
+
+<p class=MsoListParagraphCxSpLast><span style='font-size:10.0pt;line-height:
+107%;font-family:Consolas'># as there is no logo do not need to change logoLink</span></p>
+
+<h2><a name="qq_listofotheradjustablevalues"></a>Appendix 1 – List of Other Adjustable Values</h2>
+
+<p class=MsoNormal>Above sections cover the basic idea behind altering values
+and are generally cases that are somewhat more unique. Below is a list of
+variables that exist inside the class and can be changed. These can be changed
+fairly freely and do not require much thought to other parts of the document
+like the above sections </p>
+
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><b>Variable Name</b></p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><b>Type</b></p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><b>Purpose</b></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>logoPath</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Adjust file
+  path to logo. Can set to “” if not wanted</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>logoLink</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Adjust where
+  logo goes to if clicked. Can set to “” if not wanted</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>nameBlacklist</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>list of
+  strings</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Characters/strings
+  to remove from names and bookmarks</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>nameCutoff</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>list of
+  strings</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Characters/strings
+  to act as a cutoff for names and bookmarks. Everything before cutoff will be
+  removed</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>tagBlacklist</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>list of
+  strings</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Characters/strings
+  to remove from bookmarks</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>tagCutoff</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>list of
+  strings</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Characters/strings
+  to act as a cutoff for bookmarks. Everything before cutoff will be removed</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>parentHeading</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Heading
+  marker in html. Does NOT include angled brackets. Is just ‘h2’ by default</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>childHeading</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Subheading
+  marker in html. Does NOT include angled brackets. Is just ‘h3’ by default</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>tag</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>String at
+  start of a bookmark. Is ‘qq_’ by default</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>sideNavWidth</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>integer</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Size of side
+  nav menu. 340px by default. </p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>topNavHeight</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Integer</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Size of top
+  nav menu with searchbox. If less than 40px then is removed </p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>highlight</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>string</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>Colour of
+  borders and background colour when mousing over nav menu items</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=104 valign=top style='width:77.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>navFontSize</p>
+  </td>
+  <td width=94 valign=top style='width:70.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>float</p>
+  </td>
+  <td width=403 valign=top style='width:302.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'>size of
+  writing (pt) on side nav and topnav search bar</p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h2><a name="qq_scriptforcreationofthisdocument"></a>Appendix 2 – Script for Creation of This Document</h2>
+
+<p class=MsoNormal>Below is the code used to change this document into a nicer
+format to act as an example/demo in a more practical sense </p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>path = 'C:/…/UserManualPlain.htm'</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example =
+Manual(path,'UserManualModified')</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.logoPath =
+'LogoExample.png'</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.logoLink = ''</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.highlight = '#604D81'</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.sideNavWidth = 250</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.navFontSize = 12</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.nameCutoff =
+['-','\u2013']</span></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-18.0pt'><span
+style='font-family:Symbol'>&#160;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style='font-family:Consolas'>example.prettify_html()</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+<script>
+//dropdown setup start
+var dropdown = document.getElementsByClassName("dropdown-btn"); 
+var i;
+for (i = 0; i < dropdown.length; i++) {
+	dropdown[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var dropdownContent = this.nextElementSibling;
+		if (dropdownContent.style.display === "block") {
+			dropdownContent.style.display = "none";
+		} else {
+			dropdownContent.style.display = "block";
+		}
+	});
+}
+//end of dropdown setup
+
+ 
+
+//start of index setup
+var ul = document.getElementById("IndexItems");
+var li = ul.getElementsByTagName("li");
+
+
+for (i = 0; i < li.length; i++) {
+	li[i].style.display = "none"
+	} //hides all elements on startup
+
+
+function SearchFunc() {
+	//this function is called by the search box when hte input is changed  
+	var input = document.getElementById("SearchBox");
+	var filter = input.value.toUpperCase(); /*makes it so search is not case sensitive*/
+	var ul = document.getElementById("IndexItems");
+	var li = ul.getElementsByTagName("li");
+	var i;
+	//sets up variables
+	if (filter == "") {
+		for (i = 0; i < li.length; i++) {
+			li[i].style.display = "none";
+		}
+	}
+	else{
+		for (i = 0; i < li.length; i++) {
+			a = li[i].getElementsByTagName("a")[0];
+			if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				li[i].style.display = "";
+			} 
+else {
+				li[i].style.display = "none";
+			}
+		}
+	}
+	}
+//end of index setup
+</script>
